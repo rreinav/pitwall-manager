@@ -35,24 +35,50 @@ El código se organiza de forma modular para garantizar la escalabilidad del jue
 
 ### 4.2. Variables de los Pilotos del Jugador
 El usuario gestiona dos monoplazas independientes con las siguientes métricas:
-* **Modo de Conducción:**
-  * `Atacar (Push)`: Mayor velocidad, pero incrementa drásticamente el desgaste de neumáticos.
-  * `Balanceado (Neutral)`: Ritmo de carrera óptimo y desgaste estándar.
-  * `Conservar (Save)`: Reduce la velocidad para estirar la vida útil de la goma.
+* **Ritmo:**
+  * `Ataque`: Intentar adelantar siempre que sea posible.
+  * `Normal`: Conducción de carrera estándar.
+  * `Defender`: Defender la posición frente a ataques rivales.
+  * `Conservar`: Bajar el ritmo para reducir el estrés del piloto.
+* **Modo Motor:**
+  * `Alto rendimiento`: Máxima velocidad, máximo consumo de combustible.
+  * `Normal`: Equilibrio entre velocidad y consumo.
+  * `Ahorro`: Menor velocidad, menor consumo.
+* **DRS/ERS:**
+  * `Exprimir`: Gastar DRS en cada vuelta disponible.
+  * `Normal`: Uso equilibrado del DRS.
+  * `Reservar`: Mantener el DRS alto para momentos clave.
 * **Degradación de Neumáticos (Tyre Wear):** Comienza en 100%. Al caer por debajo del 30%, el monoplaza pierde adherencia y sus tiempos por vuelta empeoran severamente.
 * **Combustible:** Nivel de gasolina (0–100 kg). Mayor carga = más peso = vueltas más lentas. Menos combustible = coche más ligero. El consumo varía según el modo motor seleccionado.
-* **Modo Motor:** Mapeado electrónico del propulsor.
-  * `Alto rendimiento`: Máxima velocidad, máximo consumo de combustible.
-  * `Mixto`: Equilibrio entre velocidad y consumo.
-  * `Ahorro`: Menor velocidad, menor consumo.
-* **DRS/ERS:** Opciones básicas por piloto.
-  * `Exprimir`: Uso agresivo para adelantar o defender posición.
-  * `Reservar`: Conservar energía para momentos clave.
+* **Estrés:** Aumenta cuando el piloto está atacando o defendiendo una posición. Disminuye cuando el ritmo de carrera es bajo (Conservar). Afecta al rendimiento del piloto.
+* **Cansancio:** Aumenta en las mismas situaciones que el estrés. No se recupera durante la carrera. Afecta al rendimiento del piloto y al delay en la recepción de órdenes (a mayor cansancio, mayor delay).
 
 ### 4.3. Ventana de Pit Stop
-* El jugador puede pulsar "Llamar a Boxes" en cualquier momento de la vuelta.
-* El coche entrará al Pit Lane de forma automática al alcanzar el 100% de su progreso actual.
-* **Menú de Selección:** Permite escoger el siguiente compuesto para el relevo: Blandos (🟥 Rápidos/Cortos), Medios (🟨 Equilibrados), Duros (⬜ Lentos/Duraderos).
+* El jugador puede activar el checkbox "Solicitar parada" en cualquier momento de la vuelta.
+* En Modo Clásico la orden se ejecuta al pasar por línea de meta. En Modo Moderno se ejecuta con un delay fijo.
+* El coche entrará al Pit Lane de forma automática al alcanzar el 100% de su progreso actual si la parada está solicitada.
+* **Menú de Selección por piloto:**
+  * Dropdown de compuesto para el siguiente relevo.
+  * Range de gasolina (0–100 kg) con marcas de referencia en 22 kg, 30 kg y 100 kg.
+  * Checkbox "Solicitar parada".
+
+#### Compuestos disponibles
+
+| Compuesto | Duración estimada | Comportamiento |
+|-----------|-------------------|----------------|
+| 🟥 Blando | 15–20 vueltas | Muy rápido, pero sufre degradación térmica veloz. Ideal para tandas cortas. |
+| 🟨 Medio | 25–35 vueltas | El neumático estándar y más polivalente. Combina versatilidad y ritmo constante. |
+| ⬜ Duro | 35–45 vueltas | Alta durabilidad sacrificando velocidad punta en curvas rápidas. |
+| 🟢 Intermedio | Toda carrera si la pista está húmeda. 5–8 si se seca. | Para pista húmeda. |
+| 🔵 Lluvia | Toda carrera si llueve. 3–4 si se seca. | Diseñado para evacuar charcos profundos. |
+
+#### Tiempo de parada en boxes
+```
+tiempo_total = max(cambio_neumáticos, repostaje) + 2s_fijos
+
+cambio_neumáticos = aleatorio entre 2.5s y 3.5s
+repostaje = combustible_a_cargar / 9 kg/s
+```
 
 ### 4.4. Inteligencia Artificial y Eventos
 * **Rivales de la IA:** Hasta 18 pilotos compiten autónomamente. La IA gestiona las mismas variables que el jugador (ritmo, modo motor, combustible, neumáticos, paradas en boxes). Existen varias personalidades de IA con comportamientos distintos (agresiva, conservadora, equilibrada, etc.). La IA responde al ritmo global de la carrera, no directamente a las acciones del jugador.
@@ -63,6 +89,18 @@ El usuario gestiona dos monoplazas independientes con las siguientes métricas:
 * Las condiciones climáticas afectan al agarre y los tiempos por vuelta.
 * Influye directamente en la elección de neumáticos (slicks en seco / intermedios / lluvia).
 * Los cambios de clima abren ventanas estratégicas de pit stop.
+
+### 4.6. Modos de Juego
+
+#### 4.6.1. Modo Clásico (Sin radio)
+* Representa una época sin comunicación por radio.
+* El jugador puede ir marcando órdenes en cualquier momento (ritmo, modo motor, DRS/ERS, llamada a boxes, compuesto, gasolina).
+* Las órdenes se ejecutan con un pequeño delay tras pasar el piloto por la línea de meta, simulando que el conductor lee un cartel del equipo.
+
+#### 4.6.2. Modo Moderno (Con radio)
+* Representa la F1 actual con comunicación por radio.
+* Las órdenes se ejecutan con un delay fijo que simula la latencia de comunicación e interpretación de instrucciones.
+* Posible mejora futura: delay variable según habilidad del piloto, tipo de orden y zona del circuito (curva vs recta).
 
 ---
 
@@ -78,4 +116,87 @@ El usuario gestiona dos monoplazas independientes con las siguientes métricas:
 * **Futura feature:** Campaña con múltiples circuitos, tabla de posiciones global y mejoras progresivas del equipo entre carreras.
 
 ## 6. Notas adicionales
-* **Audio:** Descartado explícitamente. El juego es de estrategia, no un simulador, por lo que no incluirá efectos de sonido ni música.
+* **Audio:** Pendiente para versión futura. Se implementará música de fondo y efectos de sonido para eventos especiales (golpes, accidentes, salidas de pista) y efectos climáticos (lluvia, tormentas).
+
+---
+
+## 7. Especificación de Interfaz de Usuario (UI/UX)
+
+### 7.1. Pantalla de Título
+
+```
+┌─────────────────────────────────────┐
+│         🏁 PITWALL MANAGER          │
+│                                     │
+│  Modo:  ◎ Clásico  ○ Moderno        │
+│                                     │
+│  ☀️ Clima actual: 24°C - Seco       │
+│  🌧 Pronóstico: Lluvia en vta 25    │
+│                                     │
+│  Neumático inicio: [▼ Blando   ]    │
+│  ⛽ Carga inicial: [══●══] 65 kg    │
+│                                     │
+│  Marcas referencia gasolina:        │
+│   ─ 100 kg (0 paradas, 60 vtas)    │
+│   ─ 30 kg  (2 paradas, 20 vtas c/u)│
+│   ─ 22 kg  (3 paradas, 15 vtas c/u)│
+│                                     │
+│  [🏁 INICIAR CARRERA]               │
+└─────────────────────────────────────┘
+```
+
+### 7.2. Layout de Carrera (Tríptico)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ⏱ Hora │  ☀️ Clima actual │  🌧 Previsión cambio en X vtas │
+├──────────────┬────────────────────────┬─────────────────────┤
+│  📋 TIMING   │     🏁 CIRCUITO        │  📡 ÓRDENES         │
+│  Vuelta N    │   [Canvas 2D con       │  ┌─ PILOTO 1 ────┐ │
+│  ─────────   │    20 monoplazas       │  │ Ritmo [▼]     │ │
+│  PILOTO 1    │    animados]           │  │ Motor [▼]     │ │
+│  P3  +1.2s   │                        │  │ DRS/ERS [▼]   │ │
+│  ⬛ S24(6)   │                        │  │ ── BOXES ──   │ │
+│              │                        │  │ Neumático [▼] │ │
+│  PILOTO 2    │                        │  │ Gasolina [══] │ │
+│  P5  +3.8s   │                        │  │ ☐ Solicitar   │ │
+│  ⬜ H18(10)  │                        │  └───────────────┘ │
+│              │                        │  ┌─ PILOTO 2 ────┐ │
+│  ─────────   │                        │  │ ...            │ │
+│  V. Rápida   │                        │  └───────────────┘ │
+│  VER(P4)     │                        ├─────────────────────┤
+│  1:23.456    │                        │  🏎️ ESTADOS         │
+│              │                        │  ┌─ PILOTO 1 ────┐ │
+│              │                        │  │ [Diagrama      │ │
+│              │                        │  │  coche vista   │ │
+│              │                        │  │  superior]     │ │
+│              │                        │  │ 😰 ████░░ 40%  │ │
+│              │                        │  │ 😓 ██░░░░ 20%  │ │
+│              │                        │  └───────────────┘ │
+│              │                        │  ┌─ PILOTO 2 ────┐ │
+│              │                        │  │ ...            │ │
+│              │                        │  └───────────────┘ │
+└──────────────┴────────────────────────┴─────────────────────┘
+```
+
+### 7.3. Panel de Órdenes (por piloto)
+* **Fieldset "Órdenes":** Dropdowns de Ritmo, Motor y DRS/ERS.
+* **Fieldset "Boxes":** Dropdown de neumático, range de gasolina (0–100 kg con marcas 22/30/100) y checkbox "Solicitar parada".
+
+### 7.4. Panel de Estados (por piloto)
+* **Diagrama del coche en vista superior** con partes coloreadas según estado:
+  - 4 neumáticos (🟡 nuevo → 🟢 óptimo → 🟡 desgaste → 🔴 crítico)
+  - Alerón delantero (izquierdo / derecho)
+  - Alerón trasero (izquierdo / derecho)
+  - Morro
+  - Cuerpo principal
+  - Motor
+  - Colores: transparente (bien), amarillo (tocado), rojo (mal)
+* **Barras de estado del piloto:**
+  - 😰 Estrés (0–100%, recuperable)
+  - 😓 Cansancio (0–100%, no recuperable en carrera)
+
+### 7.5. Pantalla de Resultados
+* Puesto final de cada piloto.
+* Estadísticas: vueltas completadas, compuestos usados, paradas realizadas, ritmo medio.
+* Botón "Volver al menú".
