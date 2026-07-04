@@ -11,8 +11,10 @@ Estrategia en tiempo real ambientado en la temporada 2000 de Fórmula 1. Gestion
 
 [→ Ir al repositorio](https://github.com/rreinav/pitwall-manager-f1-2000)
 
-### Pitwall Manager: F1 Clásico (Coming Soon)
-Ambientado en una época sin radio. Las órdenes se ejecutan mediante carteles al pasar por meta.
+### Pitwall Manager: F1 1976
+Estrategia y gestión en tiempo real ambientado en la temporada 1976. Sin comunicaciones por radio: las órdenes se ejecutan mediante carteles al pasar por meta.
+
+[→ Ir al repositorio](https://github.com/rreinav/pitwall-manager-f1-1976)
 
 ## 📁 Estructura
 
