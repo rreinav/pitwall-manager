@@ -1,11 +1,12 @@
-# Documento de Diseño de Juego (GDD) - Pitwall Manager
+# Documento de Diseño de Juego (GDD) - Pitwall Manager: F1 2000
 
 ## 1. Visión General
-* **Título Definitivo:** Pitwall Manager
+* **Título Definitivo:** Pitwall Manager: F1 2000
 * **Género:** Estrategia / Gestión Deportiva en Tiempo Real.
 * **Rol del Jugador:** Director de Equipo (Team Principal / Jefe de Estrategia).
 * **Plataforma:** Navegadores Web (Escritorio).
 * **Tecnologías:** HTML5, CSS3, JavaScript Vanilla (ES6 Modules).
+* **Ambientación:** Todos los aspectos del juego (vehículos, pilotos, circuitos, normativa) están basados en la temporada 2000 de Fórmula 1.
 
 ## 2. Pilares de Diseño
 * **Presión en el Muro de Boxes:** Decisiones estratégicas basadas en telemetría en tiempo real.
@@ -55,7 +56,7 @@ El usuario gestiona dos monoplazas independientes con las siguientes métricas:
 
 ### 4.3. Ventana de Pit Stop
 * El jugador puede activar el checkbox "Solicitar parada" en cualquier momento de la vuelta.
-* En Modo Clásico la orden se ejecuta al pasar por línea de meta. En Modo Moderno se ejecuta con un delay fijo.
+* La orden se ejecuta tras un delay que depende del nivel de cansancio del piloto. A mayor cansancio, mayor delay en la recepción y ejecución de instrucciones.
 * El coche entrará al Pit Lane de forma automática al alcanzar el 100% de su progreso actual si la parada está solicitada.
 * **Menú de Selección por piloto:**
   * Dropdown de compuesto para el siguiente relevo.
@@ -90,17 +91,10 @@ repostaje = combustible_a_cargar / 9 kg/s
 * Influye directamente en la elección de neumáticos (slicks en seco / intermedios / lluvia).
 * Los cambios de clima abren ventanas estratégicas de pit stop.
 
-### 4.6. Modos de Juego
+### 4.6. Modo de juego
 
-#### 4.6.1. Modo Clásico (Sin radio)
-* Representa una época sin comunicación por radio.
-* El jugador puede ir marcando órdenes en cualquier momento (ritmo, modo motor, DRS/ERS, llamada a boxes, compuesto, gasolina).
-* Las órdenes se ejecutan con un pequeño delay tras pasar el piloto por la línea de meta, simulando que el conductor lee un cartel del equipo.
-
-#### 4.6.2. Modo Moderno (Con radio)
-* Representa la F1 actual con comunicación por radio.
-* Las órdenes se ejecutan con un delay fijo que simula la latencia de comunicación e interpretación de instrucciones.
-* Posible mejora futura: delay variable según habilidad del piloto, tipo de orden y zona del circuito (curva vs recta).
+* Las órdenes del jugador se ejecutan con un delay variable que depende del nivel de cansancio del piloto, simulando la latencia de comunicación e interpretación de instrucciones.
+* Posible mejora futura: delay también influenciado por la habilidad del piloto, tipo de orden y zona del circuito (curva vs recta).
 
 ---
 
@@ -127,8 +121,6 @@ repostaje = combustible_a_cargar / 9 kg/s
 ```
 ┌─────────────────────────────────────┐
 │         🏁 PITWALL MANAGER          │
-│                                     │
-│  Modo:  ◎ Clásico  ○ Moderno        │
 │                                     │
 │  ☀️ Clima actual: 24°C - Seco       │
 │  🌧 Pronóstico: Lluvia en vta 25    │
