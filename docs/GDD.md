@@ -12,7 +12,7 @@
 | Título | Estado | Descripción |
 |--------|--------|-------------|
 | **Pitwall Manager: F1 2000** | En desarrollo | Ambientado en la temporada 2000 de Fórmula 1. Estrategia en tiempo real con gestión de neumáticos, combustible y comunicaciones con delay por cansancio del piloto. |
-| **Pitwall Manager: F1 Clásico** | Planeado | Ambientado en una época sin comunicaciones por radio. Las órdenes se ejecutan tras pasar por meta, simulando carteles de equipo. |
+| **Pitwall Manager: F1 1976** | En desarrollo | Ambientado en la temporada 1976, sin comunicaciones por radio. Las órdenes se ejecutan mediante carteles al pasar por meta. |
 
 ## 3. Pilares de Diseño (Comunes)
 * **Presión en el Muro de Boxes:** Decisiones estratégicas basadas en telemetría en tiempo real.
